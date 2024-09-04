@@ -1,21 +1,15 @@
-import { getRegistryHost, getAuthHost, HEADER_WWW_AUTHENTICATE } from '../common';
+import { getRegistryHost, HEADER_WWW_AUTHENTICATE } from '../common';
 
 export async function onRequest(context) {
   const request = context.request;
   const url = new URL(request.url);
   const path = url.pathname;
-  const searchParams = url.search;
   const originalHost = request.headers.get('host');
   const registryHost = getRegistryHost(context.env, originalHost);
-  const authHost = getAuthHost(context.env);
   const headers = new Headers(request.headers);
   headers.set('host', registryHost);
-
-  if(path=="/auth") {  
-    let registryUrl = `https://${authHost}${path}${searchParams}`;
-  } else {
-    let registryUrl = `https://${registryHost}${path}${searchParams}`;
-  }
+  const registryUrl = `https://${registryHost}${path}`;
+  
   const registryRequest = new Request(registryUrl, {
     method: request.method,
     headers: headers,
