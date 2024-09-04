@@ -59,6 +59,8 @@ export async function onRequest(context) {
         console.log('auth already success');
         return registryResponse;
     }
+    console.log(registryResponse.headers);
+    console.log(registryResponse);
     // 重新鉴权
     const wwwAuth = registryResponse.headers.get(HEADER_WWW_AUTHENTICATE);
     const {realm, service} = getAuthConfig(wwwAuth);
