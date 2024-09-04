@@ -7,7 +7,7 @@ export async function onRequest(context) {
   const searchParams = url.search;
   const originalHost = request.headers.get('host');
   const registryHost = getRegistryHost(context.env, originalHost);
-  const authHost = getAuthHost();
+  const authHost = getAuthHost(context.env);
   const headers = new Headers(request.headers);
   headers.set('host', registryHost);
 
