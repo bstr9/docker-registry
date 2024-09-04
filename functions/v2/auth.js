@@ -55,7 +55,7 @@ export async function onRequest(context) {
     });
     const registryResponse = await fetch(registryRequest);
 
-    if (registryResponse.status !== 401) {//auth success
+    if (registryResponse.status == 200) {//auth success
         console.log('auth already success');
         return registryResponse;
     }
