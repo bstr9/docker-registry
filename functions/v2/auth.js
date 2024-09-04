@@ -1,5 +1,6 @@
 import { 
     getRegistryHost, 
+    getAuthHost,
     HEADER_WWW_AUTHENTICATE, 
     HEADER_AUTHORIZATION,
     BEARER,
@@ -62,7 +63,13 @@ export async function onRequest(context) {
 
     // 重新鉴权
     const wwwAuth = registryResponse.headers.get(HEADER_WWW_AUTHENTICATE);
-    const {realm, service} = getAuthConfig(wwwAuth);
+    if (wwwAuth) {
+        const {realm, service} = getAuthConfig(wwwAuth);
+    } else {
+        const authHost = getAuthHost();
+        const realm = `https://${authHost}/auth`;
+        const service = 'Docker registry';
+    }
     const authUrl = new URL(realm);
     if (service) {
         authUrl.searchParams.set('service', service);
