@@ -16,7 +16,7 @@ export function getRegistryHost(env, reqHost) {
         case env.REGISTRY_GHCR:
             return 'ghcr.io';
         default:
-            return '106.15.194.45:5000';
+            return env.DEFAULT_REGISTRY;
             // return 'registry-1.docker.io';
     }
 }
