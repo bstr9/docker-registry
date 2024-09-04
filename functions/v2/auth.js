@@ -63,16 +63,22 @@ export async function onRequest(context) {
 
     // 重新鉴权
     const wwwAuth = registryResponse.headers.get(HEADER_WWW_AUTHENTICATE);
+    const authInfo = {
+        realm: '',
+        service: ''
+    }
     if (wwwAuth) {
-        const {realm, service} = getAuthConfig(wwwAuth);
+        const authConfig = getAuthConfig(wwwAuth);
+        authInfo.realm = authConfig.realm;
+        authInfo.service = authConfig.service;
     } else {
         const authHost = getAuthHost(context.env);
-        const realm = `https://${authHost}/auth`;
-        const service = 'Docker registry';
+        authInfo.realm = `https://${authHost}/auth`;
+        authInfo.service = 'Docker registry';
     }
-    const authUrl = new URL(realm);
-    if (service) {
-        authUrl.searchParams.set('service', service);
+    const authUrl = new URL(authInfo.realm);
+    if (authInfo.service) {
+        authUrl.searchParams.set('service', authInfo.service);
     }
     const originalUrl = new URL(request.url);
     const scope = originalUrl.searchParams.get('scope');
