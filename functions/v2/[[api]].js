@@ -1,4 +1,4 @@
-import { getRegistryHost, HEADER_WWW_AUTHENTICATE } from '../common';
+import { getRegistryHost, getAuthHost, HEADER_WWW_AUTHENTICATE } from '../common';
 
 export async function onRequest(context) {
   const request = context.request;
