@@ -66,7 +66,7 @@ export async function onRequest(context) {
     if (wwwAuth) {
         const {realm, service} = getAuthConfig(wwwAuth);
     } else {
-        const authHost = getAuthHost();
+        const authHost = getAuthHost(context.env);
         const realm = `https://${authHost}/auth`;
         const service = 'Docker registry';
     }
