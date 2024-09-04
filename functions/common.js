@@ -20,6 +20,11 @@ export function getRegistryHost(env, reqHost) {
             // return 'registry-1.docker.io';
     }
 }
+
+export function getAuthHost(env) {
+    return env.DEFAULT_AUTH_HOST;
+}
+
 /**
  * check if auth user in white list
  * @param {string} authHeader the http header authentication
