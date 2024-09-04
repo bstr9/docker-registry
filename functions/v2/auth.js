@@ -35,13 +35,13 @@ export async function onRequest(context) {
     const originalHost = request.headers.get('host');
     if (context.env.WHITE_LIST) {
         const authHeader = request.headers.get(HEADER_AUTHORIZATION);
-        // console.log('auth header', authHeader, context.env.WHITE_LIST);
+        console.log('auth header', authHeader, context.env.WHITE_LIST);
         if (!authHeader) {
             return new Response('Unauthorized', {status: 401});
         }
-        if (!checkWhiteList(authHeader, context.env.WHITE_LIST.split(','))) {
-            return new Response('Unauthorized', {status: 403});
-        }
+        //if (!checkWhiteList(authHeader, context.env.WHITE_LIST.split(','))) {
+            //return new Response('Unauthorized', {status: 403});
+        //}
     }
     const registryHost = getRegistryHost(context.env, originalHost);
     const headers = new Headers(request.headers);
@@ -59,8 +59,7 @@ export async function onRequest(context) {
         console.log('auth already success');
         return registryResponse;
     }
-    console.log(registryResponse.headers);
-    console.log(registryResponse);
+
     // 重新鉴权
     const wwwAuth = registryResponse.headers.get(HEADER_WWW_AUTHENTICATE);
     const {realm, service} = getAuthConfig(wwwAuth);
