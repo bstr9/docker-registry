@@ -47,35 +47,36 @@ export async function onRequest(context) {
     const registryHost = getRegistryHost(context.env, originalHost);
     const headers = new Headers(request.headers);
     headers.set('host', registryHost);
-    const registryUrl = `https://${registryHost}/v2/`;
-    const registryRequest = new Request(registryUrl, {
-        method: request.method,
-        headers: headers,
-        body: request.body,
-        redirect: 'follow',
-    });
-    const registryResponse = await fetch(registryRequest);
-
-    if (registryResponse.status == 200) {//auth success
-        console.log('auth already success');
-        return registryResponse;
-    }
-
-    // 重新鉴权
-    const wwwAuth = registryResponse.headers.get(HEADER_WWW_AUTHENTICATE);
+    const authHost = getAuthHost(context.env);
     const authInfo = {
         realm: '',
         service: ''
     }
-    if (wwwAuth) {
+    if (authHost) {
+        authInfo.realm = `https://${authHost}/auth`;
+        authInfo.service = 'Docker registry';
+    } else {
+        const registryUrl = `https://${registryHost}/v2/`;
+        const registryRequest = new Request(registryUrl, {
+            method: request.method,
+            headers: headers,
+            body: request.body,
+            redirect: 'follow',
+        });
+        const registryResponse = await fetch(registryRequest);
+
+        if (registryResponse.status == 200) {//auth success
+            console.log('auth already success');
+            return registryResponse;
+        }
+
+    // 重新鉴权
+        const wwwAuth = registryResponse.headers.get(HEADER_WWW_AUTHENTICATE);
         const authConfig = getAuthConfig(wwwAuth);
         authInfo.realm = authConfig.realm;
         authInfo.service = authConfig.service;
-    } else {
-        const authHost = getAuthHost(context.env);
-        authInfo.realm = `https://${authHost}/auth`;
-        authInfo.service = 'Docker registry';
-    }
+    } 
+    
     const authUrl = new URL(authInfo.realm);
     if (authInfo.service) {
         authUrl.searchParams.set('service', authInfo.service);
