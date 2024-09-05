@@ -99,6 +99,13 @@ export async function onRequest(context) {
         redirect: 'follow',
     });
     const authResponse = await fetch(authRequest);
-
+  console.log(
+    authUrl,
+    authRequest.url,
+    authResponse.status,
+    headers.get('authorization'),
+    JSON.stringify(Object.fromEntries(new Map(authResponse.headers))),
+    //JSON.stringify(content),
+  );
     return authResponse;
 }
