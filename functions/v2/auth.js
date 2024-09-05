@@ -104,7 +104,7 @@ export async function onRequest(context) {
     authRequest.url,
     authResponse.status,
     headers.get('authorization'),
-    authResponse.body,
+    JSON.stringify(authResponse.body),
     JSON.stringify(Object.fromEntries(new Map(authResponse.headers))),
     //JSON.stringify(content),
   );
