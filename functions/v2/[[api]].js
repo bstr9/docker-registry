@@ -23,6 +23,7 @@ export async function onRequest(context) {
   // }
 
   console.log(
+    registryUrl,
     request.url,
     registryResponse.status,
     headers.get('authorization'),
